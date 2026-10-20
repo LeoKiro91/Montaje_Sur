@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Montajes Sur | Hornos Industriales y Revestimientos Refractarios</title>
+    <meta name="description" content="Más de 50 años de experiencia en la construcción, reparación y mantenimiento de hornos industriales, crematorios y equipos térmicos. Soluciones en refractarios.">
+
+    <!-- Fuentes de Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Estilos CSS Vanilla -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Overlay oscuro de fondo para cuando el menú móvil esté abierto -->
+    <div class="nav-overlay" id="nav-overlay"></div>
+
+    <!-- =========================================================================
+         HEADER / BARRA DE NAVEGACIÓN
+         ========================================================================= -->
+    <header class="site-header">
+        <div class="container nav-container">
+            <!-- Logotipo Oficial Montajes Sur -->
+            <a href="#inicio" class="brand-logo" aria-label="Montajes Sur Inicio">
+                <img src="IMG/Montaje Sur LOGO.png" alt="Montajes Sur - Hornos Industriales" class="site-logo-img">
+            </a>
+
+            <!-- Menú de navegación (Desktop y Mobile) -->
+            <nav class="nav-menu" id="nav-menu">
+                <a href="#inicio" class="nav-link active">Inicio</a>
+                <a href="#servicios" class="nav-link">Servicios</a>
+                <a href="#trabajos" class="nav-link">Trabajos realizados</a>
+                <a href="#nosotros" class="nav-link">Sobre nosotros</a>
+                <a href="#contacto" class="nav-link">Contacto</a>
+            </nav>
+
+            <!-- Botón WhatsApp Desktop -->
+            <a href="https://wa.me/5491100000000?text=Hola%20Montajes%20Sur,%20quisiera%20hacer%20una%20consulta" target="_blank" rel="noopener noreferrer" class="btn-whatsapp-outline nav-cta-btn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19.01L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 14.99 3.81 13.47 3.81 11.91C3.81 7.37 7.5 3.67 12.05 3.67Z"/>
+                </svg>
+                <span>Contactanos por WhatsApp</span>
+            </a>
+
+            <!-- Botón Hamburguesa para Móvil -->
+            <button class="hamburger-btn" id="hamburger-btn" aria-label="Abrir menú de navegación" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <!-- =========================================================================
+             HERO SECTION
+             ========================================================================= -->
+        <section class="hero-section" id="inicio">
+            <!-- Imagen de fondo con degradado fundido -->
+            <div class="hero-background-wrapper">
+                <div class="hero-overlay"></div>
+                <img 
+                    src="IMG/hero-horno.jpg" 
+                    alt="Interior de horno industrial con revestimiento refractario e iluminación de trabajo" 
+                    class="hero-bg-image"
+                    onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=1600&q=80'"
+                >
+            </div>
+
+            <div class="container">
+                <div class="hero-content">
+                    <span class="section-pretitle">REVESTIMIENTOS REFRACTARIOS Y MANTENIMIENTO INDUSTRIAL</span>
+                    <h1 class="hero-title">
+                        Soluciones en <span class="accent-blue">refractarios para la industria que no se detiene</span>
+                    </h1>
+                    <p class="hero-description">
+                        Más de 50 años de experiencia en la construcción, reparación y mantenimiento de hornos industriales y equipos térmicos.
+                    </p>
+                    <a href="#servicios" class="btn-primary-blue">
+                        <span>Nuestros Servicios</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========================================================================
+             FRANJA BLANCA: LOS 6 SERVICIOS PRINCIPALES
+             ========================================================================= -->
+        <section class="services-strip" id="servicios">
+            <div class="container">
+                <div class="services-grid">
+
+                    <!-- Tarjeta 1: Revestimientos refractarios -->
+                    <div class="service-card">
+                        <div class="service-icon-box" aria-hidden="true">
+                            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor">
+                                <rect x="6" y="10" width="16" height="10" rx="1.5"/>
+                                <rect x="26" y="10" width="16" height="10" rx="1.5"/>
+                                <rect x="6" y="24" width="16" height="10" rx="1.5"/>
+                                <rect x="26" y="24" width="16" height="10" rx="1.5"/>
+                                <rect x="16" y="17" width="16" height="10" rx="1.5" stroke-dasharray="2 2"/>
+                            </svg>
+                        </div>
+                        <h3 class="service-title">Revestimientos refractarios</h3>
+                        <p class="service-text">Aplicación de materiales de alto rendimiento térmico.</p>
+                    </div>
+
+                    <!-- Tarjeta 2: Reparación y reconstrucción -->
+                    <div class="service-card">
+                        <div class="service-icon-box" aria-hidden="true">
+                            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor">
+                                <path d="M36 12a8 8 0 0 1-9.5 7.8L16.2 30.1a3 3 0 1 1-4.2-4.2l10.3-10.3A8 8 0 0 1 36 12z"/>
+                                <circle cx="34" cy="14" r="2"/>
+                            </svg>
+                        </div>
+                        <h3 class="service-title">Reparación y reconstrucción de hornos</h3>
+                        <p class="service-text">Recuperamos y extendemos la vida útil de tus equipos.</p>
+                    </div>
+
+                    <!-- Tarjeta 3: Mantas y papel cerámico -->
+                    <div class="service-card">
+                        <div class="service-icon-box" aria-hidden="true">
+                            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor">
+                                <ellipse cx="14" cy="24" rx="6" ry="12"/>
+                                <path d="M14 12h22c3.3 0 6 5.4 6 12s-2.7 12-6 12H14"/>
+                                <ellipse cx="14" cy="24" rx="2" ry="4"/>
+                            </svg>
+                        </div>
+                        <h3 class="service-title">Mantas y papel cerámico</h3>
+                        <p class="service-text">Aislación térmica de alta eficiencia.</p>
+                    </div>
+
+                    <!-- Tarjeta 4: Hormigones refractarios -->
+                    <div class="service-card">
+                        <div class="service-icon-box" aria-hidden="true">
+                            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor">
+                                <path d="M8 36L24 12L40 36H8Z"/>
+                                <circle cx="24" cy="28" r="1.5" fill="currentColor"/>
+                                <circle cx="20" cy="32" r="1.5" fill="currentColor"/>
+                                <circle cx="28" cy="32" r="1.5" fill="currentColor"/>
+                                <circle cx="24" cy="22" r="1.2" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <h3 class="service-title">Hormigones refractarios</h3>
+                        <p class="service-text">Resistencia y durabilidad en condiciones extremas.</p>
+                    </div>
+
+                    <!-- Tarjeta 5: Reparaciones estructurales -->
+                    <div class="service-card">
+                        <div class="service-icon-box" aria-hidden="true">
+                            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor">
+                                <path d="M12 12h24M12 36h24M24 12v24M18 12v2M30 12v2M18 34v2M30 34v2"/>
+                                <rect x="10" y="8" width="28" height="6" rx="1"/>
+                                <rect x="10" y="34" width="28" height="6" rx="1"/>
+                                <rect x="21" y="14" width="6" height="20" rx="1"/>
+                            </svg>
+                        </div>
+                        <h3 class="service-title">Reparaciones estructurales</h3>
+                        <p class="service-text">Soluciones en metalurgia y estructuras industriales.</p>
+                    </div>
+
+                    <!-- Tarjeta 6: Herrería industrial -->
+                    <div class="service-card">
+                        <div class="service-icon-box" aria-hidden="true">
+                            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor">
+                                <rect x="12" y="10" width="24" height="28" rx="8"/>
+                                <rect x="17" y="18" width="14" height="6" rx="2"/>
+                                <line x1="24" y1="30" x2="24" y2="34"/>
+                                <line x1="20" y1="32" x2="28" y2="32"/>
+                            </svg>
+                        </div>
+                        <h3 class="service-title">Herrería industrial</h3>
+                        <p class="service-text">Fabricación y reparación de estructuras metálicas.</p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- =========================================================================
+             SECCIÓN "SOBRE NOSOTROS" Y TRABAJOS REALIZADOS
+             ========================================================================= -->
+        <section class="about-section" id="nosotros">
+            <div class="container">
+                <div class="about-layout">
+
+                    <!-- Columna Izquierda: Información Corporativa -->
+                    <div class="about-content">
+                        <span class="section-pretitle">SOBRE NOSOTROS</span>
+                        <h2 class="about-title">
+                            Experiencia, compromiso y <span class="accent-blue">trabajo industrial.</span>
+                        </h2>
+                        <p class="about-description">
+                            En Montajes Sur nos especializamos en la construcción, reparación y mantenimiento de revestimientos refractarios y hornos industriales. Contamos con un equipo técnico capacitado y la experiencia necesaria para afrontar proyectos de gran exigencia en sectores industriales.
+                        </p>
+                        <a href="#contacto" class="btn-outline-white">
+                            <span>Conocé más sobre nosotros</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </a>
+                    </div>
+
+                    <!-- Columna Derecha: 4 Tarjetas de Trabajos Realizados -->
+                    <div class="about-gallery-grid" id="trabajos">
+
+                        <!-- Tarjeta 1: Revestimientos refractarios -->
+                        <div class="gallery-card">
+                            <img 
+                                src="IMG/hero-horno.jpg" 
+                                alt="Revestimientos refractarios en interior de horno" 
+                                class="gallery-card-img"
+                            >
+                            <div class="gallery-card-overlay">
+                                <span class="gallery-card-label">Revestimientos refractarios</span>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta 2: Fundición de hierro -->
+                        <div class="gallery-card">
+                            <img 
+                                src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=600&q=80" 
+                                alt="Horno de fundición de hierro al rojo vivo" 
+                                class="gallery-card-img"
+                            >
+                            <div class="gallery-card-overlay">
+                                <span class="gallery-card-label">Fundición de hierro</span>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta 3: Crematorio -->
+                        <div class="gallery-card">
+                            <img 
+                                src="https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=600&q=80" 
+                                alt="Instalación de horno crematorio industrial" 
+                                class="gallery-card-img"
+                            >
+                            <div class="gallery-card-overlay">
+                                <span class="gallery-card-label">Crematorio</span>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta 4: Fundición de aluminio -->
+                        <div class="gallery-card">
+                            <img 
+                                src="https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&w=600&q=80" 
+                                alt="Fundición y colada de metal incandescente" 
+                                class="gallery-card-img"
+                            >
+                            <div class="gallery-card-overlay">
+                                <span class="gallery-card-label">Fundición de aluminio</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========================================================================
+             BANNER PRE-FOOTER: "¿TENÉS UN PROYECTO? ESTAMOS PARA AYUDARTE"
+             ========================================================================= -->
+        <section class="cta-banner-section" id="contacto">
+            <div class="container">
+                <div class="cta-banner-grid">
+                    <!-- Imagen miniatura industrial de vigas y planta -->
+                    <div class="cta-banner-image-box">
+                        <img 
+                            src="https://images.unsplash.com/photo-1513828583688-c52646db42da?auto=format&fit=crop&w=600&q=80" 
+                            alt="Estructura metálica e industrial" 
+                            class="cta-banner-img"
+                        >
+                    </div>
+
+                    <!-- Texto del Banner -->
+                    <div class="cta-banner-text">
+                        <span class="section-pretitle" style="margin-bottom: 6px;">¿TENÉS UN PROYECTO?</span>
+                        <h2 class="cta-banner-title">
+                            Estamos para <span class="accent-blue">ayudarte</span>
+                        </h2>
+                        <p class="cta-banner-desc">
+                            Consultanos sin compromiso. Te asesoramos y buscamos la mejor solución para tu necesidad.
+                        </p>
+                    </div>
+
+                    <!-- Botón WhatsApp de Acción Directa -->
+                    <div class="cta-banner-btn-box">
+                        <a href="https://wa.me/5491100000000?text=Hola%20Montajes%20Sur,%20tengo%20un%20proyecto%20y%20quisiera%20asesoramiento" target="_blank" rel="noopener noreferrer" class="btn-whatsapp-solid">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19.01L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 14.99 3.81 13.47 3.81 11.91C3.81 7.37 7.5 3.67 12.05 3.67Z"/>
+                            </svg>
+                            <span>WhatsApp</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- =========================================================================
+         FOOTER CORPORATIVO
+         ========================================================================= -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <!-- Columna Marca -->
+                <div class="footer-col-brand">
+                    <a href="#inicio" class="brand-logo" style="margin-bottom: 12px;" aria-label="Montajes Sur Inicio">
+                        <img src="IMG/Montaje Sur LOGO.png" alt="Montajes Sur - Hornos Industriales" class="site-logo-img footer-logo-img">
+                    </a>
+                    <p class="footer-brand-text">
+                        Ingeniería, construcción, reparación y mantenimiento de hornos industriales, crematorios y equipos térmicos de alta exigencia.
+                    </p>
+                </div>
+
+                <!-- Columna Enlaces Rápidos -->
+                <div>
+                    <h4 class="footer-col-title">Navegación</h4>
+                    <ul class="footer-links">
+                        <li><a href="#inicio">Inicio</a></li>
+                        <li><a href="#servicios">Servicios</a></li>
+                        <li><a href="#trabajos">Trabajos realizados</a></li>
+                        <li><a href="#nosotros">Sobre nosotros</a></li>
+                        <li><a href="#contacto">Contacto</a></li>
+                    </ul>
+                </div>
+
+                <!-- Columna Especialidades -->
+                <div>
+                    <h4 class="footer-col-title">Servicios</h4>
+                    <ul class="footer-links">
+                        <li><a href="#servicios">Revestimientos refractarios</a></li>
+                        <li><a href="#servicios">Hornos crematorios</a></li>
+                        <li><a href="#servicios">Fundición y tratamiento térmico</a></li>
+                        <li><a href="#servicios">Hormigones refractarios</a></li>
+                        <li><a href="#servicios">Herrería industrial</a></li>
+                    </ul>
+                </div>
+
+                <!-- Columna Contacto -->
+                <div>
+                    <h4 class="footer-col-title">Atención Técnica</h4>
+                    <div class="footer-contact-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                        <span>Atención comercial y urgencias técnicas</span>
+                    </div>
+                    <div class="footer-contact-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                        <span>info@montajessur.com</span>
+                    </div>
+                    <div class="footer-contact-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        <span>Cobertura y servicio en toda la región</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 Montajes Sur - Hornos Industriales. Todos los derechos reservados.</p>
+                <p>Construcción, Reparación y Mantenimiento de Equipos Térmicos</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Lógica JavaScript Vanilla para navegación y menú hamburguesa -->
+    <script src="script.js"></script>
+</body>
+</html>
