@@ -81,14 +81,54 @@ document.addEventListener('DOMContentLoaded', async () => {
     const jobModalError = document.getElementById('job-modal-error');
     const fileDropArea = document.getElementById('file-drop-area');
     const jobFileInput = document.getElementById('job-file-input');
-    const imagePreview = document.getElementById('image-preview');
     const jobImageUrlInput = document.getElementById('job-image-url');
+    const addUrlPhotoBtn = document.getElementById('add-url-photo-btn');
+    const imageThumbnailsGrid = document.getElementById('image-thumbnails-grid');
+    const photosCounter = document.getElementById('photos-counter');
 
     let currentEditingJob = null;
-    let selectedFile = null;
+    let currentPhotos = []; // Lista de fotos: { type: 'file' | 'url', file?, url?, preview }
+
+    /**
+     * Renderiza las miniaturas de las fotos en el modal
+     */
+    function renderThumbnails() {
+        if (!imageThumbnailsGrid || !photosCounter) return;
+
+        photosCounter.textContent = `${currentPhotos.length} / 10 fotos seleccionadas`;
+        photosCounter.style.color = currentPhotos.length >= 10 ? 'var(--color-warning)' : 'var(--color-accent-blue-light)';
+
+        if (currentPhotos.length === 0) {
+            imageThumbnailsGrid.innerHTML = '';
+            return;
+        }
+
+        imageThumbnailsGrid.innerHTML = currentPhotos.map((photo, index) => {
+            const isCover = index === 0;
+            const src = photo.preview || photo.url;
+            return `
+                <div class="thumb-item ${isCover ? 'cover-photo' : ''}">
+                    <img src="${src}" alt="Foto ${index + 1}" onerror="this.src='IMG/hero-horno.jpg'">
+                    ${isCover ? '<div class="cover-badge">Portada</div>' : ''}
+                    <button type="button" class="thumb-remove-btn" data-index="${index}" title="Eliminar foto">&times;</button>
+                </div>
+            `;
+        }).join('');
+
+        // Evento para eliminar fotos individuales
+        imageThumbnailsGrid.querySelectorAll('.thumb-remove-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const idx = parseInt(btn.getAttribute('data-index'), 10);
+                currentPhotos.splice(idx, 1);
+                renderThumbnails();
+            });
+        });
+    }
 
     /**
      * Cargar y renderizar los trabajos en el panel
+     * Ordenados del más NUEVO al más VIEJO (created_at DESC)
      */
     async function loadAdminJobs() {
         if (!jobsContainer) return;
@@ -103,7 +143,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const { data: trabajos, error } = await sb
                 .from('trabajos')
                 .select('*')
-                .order('orden', { ascending: true });
+                .order('created_at', { ascending: false });
 
             if (error) throw error;
 
@@ -118,12 +158,21 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             jobsContainer.innerHTML = trabajos.map(job => {
-                const img = job.imagen_url || 'IMG/hero-horno.jpg';
+                // Obtener fotos
+                let fotos = [];
+                if (Array.isArray(job.imagenes) && job.imagenes.length > 0) {
+                    fotos = job.imagenes;
+                } else if (job.imagen_url) {
+                    fotos = [job.imagen_url];
+                }
+                const coverImg = fotos[0] || 'IMG/hero-horno.jpg';
+                const totalFotos = fotos.length;
+
                 return `
                     <div class="job-admin-card" data-id="${job.id}">
                         <div class="job-card-thumb-wrapper">
-                            <img src="${img}" alt="${job.titulo}" class="job-card-thumb" onerror="this.src='IMG/hero-horno.jpg'">
-                            <span class="job-card-order-badge">Orden #${job.orden || 1}</span>
+                            <img src="${coverImg}" alt="${job.titulo}" class="job-card-thumb" onerror="this.src='IMG/hero-horno.jpg'">
+                            <span class="photos-badge">📷 ${totalFotos} ${totalFotos === 1 ? 'foto' : 'fotos'}</span>
                         </div>
                         <div class="job-admin-card-body">
                             <h3 class="job-card-title">${job.titulo}</h3>
@@ -175,38 +224,57 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     /**
-     * Manejo del selector de archivos y vista previa
+     * Selección de múltiples archivos desde la computadora (hasta 10 fotos)
      */
     if (fileDropArea && jobFileInput) {
         fileDropArea.addEventListener('click', () => jobFileInput.click());
 
         jobFileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                if (file.size > 5 * 1024 * 1024) {
-                    alert('La imagen no puede pesar más de 5MB.');
-                    jobFileInput.value = '';
-                    return;
+            const files = Array.from(e.target.files);
+            if (!files.length) return;
+
+            for (const file of files) {
+                if (currentPhotos.length >= 10) {
+                    alert('Podés agregar hasta 10 fotos por trabajo.');
+                    break;
                 }
-                selectedFile = file;
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    imagePreview.src = event.target.result;
-                    imagePreview.style.display = 'block';
-                };
-                reader.readAsDataURL(file);
+                if (file.size > 5 * 1024 * 1024) {
+                    alert(`La imagen "${file.name}" supera los 5MB.`);
+                    continue;
+                }
+                currentPhotos.push({
+                    type: 'file',
+                    file: file,
+                    preview: URL.createObjectURL(file)
+                });
             }
+
+            jobFileInput.value = '';
+            renderThumbnails();
         });
     }
 
-    if (jobImageUrlInput) {
-        jobImageUrlInput.addEventListener('input', (e) => {
-            const url = e.target.value.trim();
-            if (url) {
-                imagePreview.src = url;
-                imagePreview.style.display = 'block';
-                selectedFile = null;
+    /**
+     * Agregar foto por URL
+     */
+    if (addUrlPhotoBtn && jobImageUrlInput) {
+        addUrlPhotoBtn.addEventListener('click', () => {
+            const url = jobImageUrlInput.value.trim();
+            if (!url) return;
+
+            if (currentPhotos.length >= 10) {
+                alert('Podés agregar hasta 10 fotos por trabajo.');
+                return;
             }
+
+            currentPhotos.push({
+                type: 'url',
+                url: url,
+                preview: url
+            });
+
+            jobImageUrlInput.value = '';
+            renderThumbnails();
         });
     }
 
@@ -217,12 +285,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (openNewJobBtn) {
         openNewJobBtn.addEventListener('click', () => {
             currentEditingJob = null;
-            selectedFile = null;
+            currentPhotos = [];
             jobForm.reset();
             document.getElementById('job-id').value = '';
             document.getElementById('job-order').value = '1';
-            imagePreview.style.display = 'none';
-            imagePreview.src = '';
+            renderThumbnails();
             jobModalError.style.display = 'none';
             modalTitle.textContent = 'Nuevo Trabajo';
             jobModal.classList.add('active');
@@ -234,21 +301,28 @@ document.addEventListener('DOMContentLoaded', async () => {
      */
     function openEditModal(job) {
         currentEditingJob = job;
-        selectedFile = null;
+        currentPhotos = [];
         jobForm.reset();
         document.getElementById('job-id').value = job.id;
         document.getElementById('job-title').value = job.titulo;
         document.getElementById('job-desc').value = job.descripcion || '';
         document.getElementById('job-order').value = job.orden || 1;
-        document.getElementById('job-image-url').value = job.imagen_url || '';
 
-        if (job.imagen_url) {
-            imagePreview.src = job.imagen_url;
-            imagePreview.style.display = 'block';
-        } else {
-            imagePreview.style.display = 'none';
+        // Cargar fotos existentes
+        let fotos = [];
+        if (Array.isArray(job.imagenes) && job.imagenes.length > 0) {
+            fotos = job.imagenes;
+        } else if (job.imagen_url) {
+            fotos = [job.imagen_url];
         }
 
+        currentPhotos = fotos.map(url => ({
+            type: 'url',
+            url: url,
+            preview: url
+        }));
+
+        renderThumbnails();
         jobModalError.style.display = 'none';
         modalTitle.textContent = 'Editar Trabajo';
         jobModal.classList.add('active');
@@ -260,7 +334,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function closeModal() {
         jobModal.classList.remove('active');
         currentEditingJob = null;
-        selectedFile = null;
+        currentPhotos = [];
     }
 
     document.getElementById('modal-close-btn').addEventListener('click', closeModal);
@@ -270,7 +344,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     /**
-     * Guardar trabajo (Crear o Actualizar)
+     * Guardar trabajo (Crear o Actualizar con hasta 10 fotos)
      */
     jobForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -284,11 +358,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         const titulo = document.getElementById('job-title').value.trim();
         const descripcion = document.getElementById('job-desc').value.trim();
         const orden = parseInt(document.getElementById('job-order').value, 10) || 1;
-        let imagen_url = document.getElementById('job-image-url').value.trim();
 
-        // Validar que haya al menos una imagen
-        if (!selectedFile && !imagen_url && (!currentEditingJob || !currentEditingJob.imagen_url)) {
-            jobModalError.textContent = 'Por favor seleccioná una imagen o ingresá una URL.';
+        // Validar que haya al menos una foto
+        if (currentPhotos.length === 0) {
+            jobModalError.textContent = 'Por favor agregá al menos una foto para el trabajo.';
             jobModalError.style.display = 'block';
             return;
         }
@@ -298,30 +371,38 @@ document.addEventListener('DOMContentLoaded', async () => {
         saveSpinner.style.display = 'inline-block';
 
         try {
-            // 1. Si el usuario seleccionó un archivo local, subirlo a Supabase Storage
-            if (selectedFile) {
-                const fileExt = selectedFile.name.split('.').pop();
-                const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
-                const filePath = `trabajos/${fileName}`;
+            const finalImageUrls = [];
 
-                const { data: uploadData, error: uploadError } = await sb.storage
-                    .from('imagenes-trabajos')
-                    .upload(filePath, selectedFile, {
-                        cacheControl: '3600',
-                        upsert: false
-                    });
+            // 1. Subir cada archivo nuevo a Supabase Storage y recopilar URLs
+            for (let i = 0; i < currentPhotos.length; i++) {
+                const photo = currentPhotos[i];
 
-                if (uploadError) throw uploadError;
+                if (photo.type === 'file' && photo.file) {
+                    saveText.textContent = `Subiendo foto ${i + 1}/${currentPhotos.length}...`;
+                    const fileExt = photo.file.name.split('.').pop();
+                    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
+                    const filePath = `trabajos/${fileName}`;
 
-                // Obtener la URL pública oficial de la foto subida
-                const { data: { publicUrl } } = sb.storage
-                    .from('imagenes-trabajos')
-                    .getPublicUrl(filePath);
+                    const { error: uploadError } = await sb.storage
+                        .from('imagenes-trabajos')
+                        .upload(filePath, photo.file, {
+                            cacheControl: '3600',
+                            upsert: false
+                        });
 
-                imagen_url = publicUrl;
-            } else if (!imagen_url && currentEditingJob) {
-                imagen_url = currentEditingJob.imagen_url;
+                    if (uploadError) throw uploadError;
+
+                    const { data: { publicUrl } } = sb.storage
+                        .from('imagenes-trabajos')
+                        .getPublicUrl(filePath);
+
+                    finalImageUrls.push(publicUrl);
+                } else if (photo.url) {
+                    finalImageUrls.push(photo.url);
+                }
             }
+
+            const coverImage = finalImageUrls[0] || 'IMG/hero-horno.jpg';
 
             // 2. Insertar o Actualizar en la base de datos
             if (id) {
@@ -332,26 +413,29 @@ document.addEventListener('DOMContentLoaded', async () => {
                         titulo,
                         descripcion,
                         orden,
-                        imagen_url
+                        imagen_url: coverImage,
+                        imagenes: finalImageUrls
                     })
                     .eq('id', id);
 
                 if (error) throw error;
                 showToast('Trabajo actualizado exitosamente');
             } else {
-                // Insertar nuevo
+                // Insertar nuevo (created_at queda como el más reciente)
                 const { error } = await sb
                     .from('trabajos')
                     .insert([{
                         titulo,
                         descripcion,
                         orden,
-                        imagen_url,
-                        activo: true
+                        imagen_url: coverImage,
+                        imagenes: finalImageUrls,
+                        activo: true,
+                        created_at: new Date().toISOString()
                     }]);
 
                 if (error) throw error;
-                showToast('Nuevo trabajo agregado a la galería');
+                showToast('Nuevo trabajo agregado en primer lugar');
             }
 
             closeModal();
@@ -363,6 +447,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             jobModalError.style.display = 'block';
         } finally {
             saveBtn.disabled = false;
+            saveText.textContent = 'Guardar Trabajo';
             saveText.style.display = 'inline-block';
             saveSpinner.style.display = 'none';
         }

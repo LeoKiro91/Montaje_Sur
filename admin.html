@@ -220,9 +220,9 @@
                     <p class="form-hint">El número 1 aparece primero, luego el 2, etc.</p>
                 </div>
 
-                <!-- SUBIDA DE IMAGEN -->
+                <!-- SUBIDA DE IMÁGENES (HASTA 10 FOTOS) -->
                 <div class="form-group">
-                    <label class="form-label">Fotografía del trabajo *</label>
+                    <label class="form-label">Fotografías del trabajo (hasta 10 fotos) *</label>
                     
                     <div class="file-upload-box" id="file-drop-area">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="36" height="36" style="margin: 0 auto 10px; color: var(--color-accent-blue); display: block;">
@@ -230,15 +230,25 @@
                             <polyline points="17 8 12 3 7 8"></polyline>
                             <line x1="12" y1="3" x2="12" y2="15"></line>
                         </svg>
-                        <p style="font-size: 14px; font-weight: 600; margin-bottom: 4px;">Hacé clic para seleccionar una imagen</p>
-                        <p style="font-size: 12px; color: var(--color-text-gray);">JPG, PNG o WEBP (máx. 5MB)</p>
-                        <input type="file" id="job-file-input" accept="image/*" style="display: none;">
-                        <img id="image-preview" class="file-upload-preview" alt="Vista previa">
+                        <p style="font-size: 14px; font-weight: 600; margin-bottom: 4px;">Hacé clic para seleccionar una o varias imágenes</p>
+                        <p style="font-size: 12px; color: var(--color-text-gray);">Podés elegir hasta 10 fotos juntas o de a una (JPG, PNG o WEBP)</p>
+                        <input type="file" id="job-file-input" accept="image/*" multiple style="display: none;">
                     </div>
 
-                    <div style="margin-top: 10px;">
-                        <span style="font-size: 12px; color: var(--color-text-muted);">O ingresá una URL directa de imagen si ya está en internet:</span>
-                        <input type="url" id="job-image-url" class="form-control" placeholder="https://..." style="margin-top: 6px;">
+                    <!-- Contador y grilla de fotos seleccionadas -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                        <span id="photos-counter" style="font-size: 12.5px; font-weight: 600; color: var(--color-accent-blue-light);">0 / 10 fotos seleccionadas</span>
+                        <span style="font-size: 11px; color: var(--color-text-muted);">La primera foto es la portada</span>
+                    </div>
+
+                    <div id="image-thumbnails-grid" class="image-thumbnails-grid"></div>
+
+                    <div style="margin-top: 14px;">
+                        <span style="font-size: 12px; color: var(--color-text-muted);">O agregar foto por enlace URL:</span>
+                        <div style="display: flex; gap: 8px; margin-top: 6px;">
+                            <input type="url" id="job-image-url" class="form-control" placeholder="https://...">
+                            <button type="button" id="add-url-photo-btn" class="btn-secondary" style="white-space: nowrap; padding: 8px 14px;">+ Agregar</button>
+                        </div>
                     </div>
                 </div>
 

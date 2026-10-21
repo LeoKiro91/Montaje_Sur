@@ -379,6 +379,41 @@
         </div>
     </footer>
 
+    <!-- =========================================================================
+         VISOR MODAL / LIGHTBOX PARA VISUALIZAR TRABAJOS Y SUS FOTOS
+         ========================================================================= -->
+    <div id="lightbox-modal" class="lightbox-overlay" aria-hidden="true" role="dialog">
+        <div class="lightbox-container">
+            <button id="lightbox-close-btn" class="lightbox-close-btn" aria-label="Cerrar visor">&times;</button>
+            
+            <div class="lightbox-main-img-wrap">
+                <button id="lightbox-prev-btn" class="lightbox-nav-btn lightbox-prev-btn" aria-label="Foto anterior">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="20" height="20">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+
+                <img id="lightbox-current-img" src="" alt="Trabajo realizado" class="lightbox-main-img">
+
+                <button id="lightbox-next-btn" class="lightbox-nav-btn lightbox-next-btn" aria-label="Foto siguiente">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="20" height="20">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="lightbox-info">
+                <div>
+                    <h3 id="lightbox-title" class="lightbox-title">Título del trabajo</h3>
+                    <p id="lightbox-desc" style="font-size: 0.85rem; color: var(--color-text-gray); margin-top: 4px;"></p>
+                </div>
+                <span id="lightbox-counter" class="lightbox-counter">1 / 1</span>
+            </div>
+
+            <div id="lightbox-thumbs-strip" class="lightbox-thumbs-strip"></div>
+        </div>
+    </div>
+
     <!-- Supabase JS Client y Conexión -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-client.js"></script>

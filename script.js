@@ -93,9 +93,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // =========================================================================
 
     /**
-     * Carga la lista de trabajos realizados desde la base de datos de Supabase.
-     * Si no hay conexión o ocurre un error, mantiene intactas las tarjetas estáticas originales.
+     * Carga la lista de trabajos realizados desde Supabase.
+     * Ordenados de MÁS NUEVO a MÁS VIEJO (created_at DESC).
+     * Soporta hasta 10 fotos por trabajo con visor interactivo (Lightbox).
      */
+    let trabajosCargados = [];
+
     async function cargarTrabajosDesdeSupabase() {
         if (!window.supabaseClient) {
             console.warn('Supabase no está inicializado. Se muestran las tarjetas predeterminadas.');
@@ -107,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 .from('trabajos')
                 .select('*')
                 .eq('activo', true)
-                .order('orden', { ascending: true });
+                .order('created_at', { ascending: false });
 
             if (error) {
                 console.error('Error al consultar trabajos en Supabase:', error.message);
@@ -115,17 +118,25 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (trabajos && trabajos.length > 0) {
+                trabajosCargados = trabajos;
                 const trabajosContainer = document.getElementById('trabajos');
                 if (!trabajosContainer) return;
 
                 // Generamos el HTML usando exactamente las mismas clases de estilo
-                const htmlTarjetas = trabajos.map(trabajo => {
+                const htmlTarjetas = trabajos.map((trabajo, index) => {
                     const fallbackImg = 'IMG/hero-horno.jpg';
-                    const imagenSrc = trabajo.imagen_url || fallbackImg;
+                    let fotos = [];
+                    if (Array.isArray(trabajo.imagenes) && trabajo.imagenes.length > 0) {
+                        fotos = trabajo.imagenes;
+                    } else if (trabajo.imagen_url) {
+                        fotos = [trabajo.imagen_url];
+                    }
+                    const imagenSrc = fotos[0] || fallbackImg;
                     const titulo = trabajo.titulo || 'Trabajo realizado';
+                    const totalFotos = fotos.length;
 
                     return `
-                        <div class="gallery-card">
+                        <div class="gallery-card" data-job-index="${index}" title="Hacé clic para ver las fotos">
                             <img 
                                 src="${imagenSrc}" 
                                 alt="${titulo}" 
@@ -133,6 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 loading="lazy"
                                 onerror="this.onerror=null;this.src='${fallbackImg}'"
                             >
+                            ${totalFotos > 1 ? `<span class="gallery-card-badge">📷 ${totalFotos} fotos</span>` : ''}
                             <div class="gallery-card-overlay">
                                 <span class="gallery-card-label">${titulo}</span>
                             </div>
@@ -141,11 +153,134 @@ document.addEventListener('DOMContentLoaded', () => {
                 }).join('');
 
                 trabajosContainer.innerHTML = htmlTarjetas;
+
+                // Eventos de clic para abrir el visor de fotos (Lightbox)
+                trabajosContainer.querySelectorAll('.gallery-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        const idx = parseInt(card.getAttribute('data-job-index'), 10);
+                        abrirLightbox(idx);
+                    });
+                });
             }
         } catch (err) {
             console.error('Error inesperado al cargar trabajos:', err);
         }
     }
+
+    // =========================================================================
+    // 8. LÓGICA DEL VISOR MODAL (LIGHTBOX) PARA EXPLORAR FOTOS
+    // =========================================================================
+    const lightboxModal = document.getElementById('lightbox-modal');
+    const lightboxImg = document.getElementById('lightbox-current-img');
+    const lightboxTitle = document.getElementById('lightbox-title');
+    const lightboxDesc = document.getElementById('lightbox-desc');
+    const lightboxCounter = document.getElementById('lightbox-counter');
+    const lightboxThumbsStrip = document.getElementById('lightbox-thumbs-strip');
+    const lightboxCloseBtn = document.getElementById('lightbox-close-btn');
+    const lightboxPrevBtn = document.getElementById('lightbox-prev-btn');
+    const lightboxNextBtn = document.getElementById('lightbox-next-btn');
+
+    let currentJobPhotos = [];
+    let currentPhotoIndex = 0;
+
+    function abrirLightbox(jobIndex) {
+        const job = trabajosCargados[jobIndex];
+        if (!job) return;
+
+        let fotos = [];
+        if (Array.isArray(job.imagenes) && job.imagenes.length > 0) {
+            fotos = job.imagenes;
+        } else if (job.imagen_url) {
+            fotos = [job.imagen_url];
+        }
+
+        if (fotos.length === 0) fotos = ['IMG/hero-horno.jpg'];
+
+        currentJobPhotos = fotos;
+        currentPhotoIndex = 0;
+
+        lightboxTitle.textContent = job.titulo || 'Trabajo realizado';
+        lightboxDesc.textContent = job.descripcion || '';
+
+        actualizarFotoLightbox();
+        lightboxModal.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function actualizarFotoLightbox() {
+        if (!currentJobPhotos.length) return;
+
+        const currentUrl = currentJobPhotos[currentPhotoIndex];
+        lightboxImg.src = currentUrl;
+        lightboxCounter.textContent = `${currentPhotoIndex + 1} / ${currentJobPhotos.length}`;
+
+        // Mostrar u ocultar botones de siguiente / anterior si hay una sola foto
+        if (currentJobPhotos.length <= 1) {
+            lightboxPrevBtn.style.display = 'none';
+            lightboxNextBtn.style.display = 'none';
+            lightboxThumbsStrip.style.display = 'none';
+        } else {
+            lightboxPrevBtn.style.display = 'flex';
+            lightboxNextBtn.style.display = 'flex';
+            lightboxThumbsStrip.style.display = 'flex';
+
+            // Generar tira inferior de miniaturas
+            lightboxThumbsStrip.innerHTML = currentJobPhotos.map((url, i) => `
+                <img 
+                    src="${url}" 
+                    class="lightbox-strip-thumb ${i === currentPhotoIndex ? 'active' : ''}" 
+                    data-thumb-index="${i}"
+                    alt="Miniatura ${i + 1}"
+                >
+            `).join('');
+
+            lightboxThumbsStrip.querySelectorAll('.lightbox-strip-thumb').forEach(thumb => {
+                thumb.addEventListener('click', () => {
+                    currentPhotoIndex = parseInt(thumb.getAttribute('data-thumb-index'), 10);
+                    actualizarFotoLightbox();
+                });
+            });
+        }
+    }
+
+    function cerrarLightbox() {
+        if (lightboxModal) {
+            lightboxModal.classList.remove('is-open');
+            document.body.style.overflow = '';
+        }
+    }
+
+    function fotoAnterior() {
+        if (currentJobPhotos.length <= 1) return;
+        currentPhotoIndex = (currentPhotoIndex - 1 + currentJobPhotos.length) % currentJobPhotos.length;
+        actualizarFotoLightbox();
+    }
+
+    function fotoSiguiente() {
+        if (currentJobPhotos.length <= 1) return;
+        currentPhotoIndex = (currentPhotoIndex + 1) % currentJobPhotos.length;
+        actualizarFotoLightbox();
+    }
+
+    if (lightboxCloseBtn) lightboxCloseBtn.addEventListener('click', cerrarLightbox);
+    if (lightboxPrevBtn) lightboxPrevBtn.addEventListener('click', fotoAnterior);
+    if (lightboxNextBtn) lightboxNextBtn.addEventListener('click', fotoSiguiente);
+
+    if (lightboxModal) {
+        lightboxModal.addEventListener('click', (e) => {
+            if (e.target === lightboxModal) cerrarLightbox();
+        });
+    }
+
+    // Navegación con teclado (Flechas y ESC)
+    document.addEventListener('keydown', (e) => {
+        if (lightboxModal && lightboxModal.classList.contains('is-open')) {
+            if (e.key === 'Escape') cerrarLightbox();
+            if (e.key === 'ArrowLeft') fotoAnterior();
+            if (e.key === 'ArrowRight') fotoSiguiente();
+        }
+    });
+
 
     /**
      * Carga los datos de contacto y textos comerciales desde la tabla 'configuracion'.
