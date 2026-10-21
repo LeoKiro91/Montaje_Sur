@@ -87,4 +87,127 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     window.addEventListener('scroll', highlightActiveLink, { passive: true });
+
+    // =========================================================================
+    // 7. CARGA DINÁMICA DE TRABAJOS Y CONFIGURACIÓN DESDE SUPABASE
+    // =========================================================================
+
+    /**
+     * Carga la lista de trabajos realizados desde la base de datos de Supabase.
+     * Si no hay conexión o ocurre un error, mantiene intactas las tarjetas estáticas originales.
+     */
+    async function cargarTrabajosDesdeSupabase() {
+        if (!window.supabaseClient) {
+            console.warn('Supabase no está inicializado. Se muestran las tarjetas predeterminadas.');
+            return;
+        }
+
+        try {
+            const { data: trabajos, error } = await window.supabaseClient
+                .from('trabajos')
+                .select('*')
+                .eq('activo', true)
+                .order('orden', { ascending: true });
+
+            if (error) {
+                console.error('Error al consultar trabajos en Supabase:', error.message);
+                return;
+            }
+
+            if (trabajos && trabajos.length > 0) {
+                const trabajosContainer = document.getElementById('trabajos');
+                if (!trabajosContainer) return;
+
+                // Generamos el HTML usando exactamente las mismas clases de estilo
+                const htmlTarjetas = trabajos.map(trabajo => {
+                    const fallbackImg = 'IMG/hero-horno.jpg';
+                    const imagenSrc = trabajo.imagen_url || fallbackImg;
+                    const titulo = trabajo.titulo || 'Trabajo realizado';
+
+                    return `
+                        <div class="gallery-card">
+                            <img 
+                                src="${imagenSrc}" 
+                                alt="${titulo}" 
+                                class="gallery-card-img"
+                                loading="lazy"
+                                onerror="this.onerror=null;this.src='${fallbackImg}'"
+                            >
+                            <div class="gallery-card-overlay">
+                                <span class="gallery-card-label">${titulo}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                trabajosContainer.innerHTML = htmlTarjetas;
+            }
+        } catch (err) {
+            console.error('Error inesperado al cargar trabajos:', err);
+        }
+    }
+
+    /**
+     * Carga los datos de contacto y textos comerciales desde la tabla 'configuracion'.
+     */
+    async function cargarConfiguracionDesdeSupabase() {
+        if (!window.supabaseClient) return;
+
+        try {
+            const { data: config, error } = await window.supabaseClient
+                .from('configuracion')
+                .select('*')
+                .eq('id', 1)
+                .single();
+
+            if (error) {
+                console.error('Error al consultar configuración en Supabase:', error.message);
+                return;
+            }
+
+            if (config) {
+                const numeroWhatsApp = config.whatsapp_numero || '5491100000000';
+
+                // 1. Actualizar botón WhatsApp del header
+                const navWhatsApp = document.getElementById('nav-whatsapp-btn');
+                if (navWhatsApp) {
+                    navWhatsApp.href = `https://wa.me/${numeroWhatsApp}?text=Hola%20Montajes%20Sur,%20quisiera%20hacer%20una%20consulta`;
+                }
+
+                // 2. Actualizar botón WhatsApp del banner
+                const ctaWhatsApp = document.getElementById('cta-whatsapp-btn');
+                if (ctaWhatsApp) {
+                    ctaWhatsApp.href = `https://wa.me/${numeroWhatsApp}?text=Hola%20Montajes%20Sur,%20tengo%20un%20proyecto%20y%20quisiera%20asesoramiento`;
+                }
+
+                // 3. Actualizar texto descriptivo del banner
+                const ctaBannerDesc = document.getElementById('cta-banner-desc');
+                if (ctaBannerDesc && config.texto_banner) {
+                    ctaBannerDesc.textContent = config.texto_banner;
+                }
+
+                // 4. Actualizar datos de contacto en el Footer
+                const footerTelefono = document.getElementById('footer-telefono');
+                if (footerTelefono && config.telefono_contacto) {
+                    footerTelefono.textContent = config.telefono_contacto;
+                }
+
+                const footerEmail = document.getElementById('footer-email');
+                if (footerEmail && config.email_contacto) {
+                    footerEmail.textContent = config.email_contacto;
+                }
+
+                const footerCobertura = document.getElementById('footer-cobertura');
+                if (footerCobertura && config.cobertura_texto) {
+                    footerCobertura.textContent = config.cobertura_texto;
+                }
+            }
+        } catch (err) {
+            console.error('Error inesperado al cargar configuración:', err);
+        }
+    }
+
+    // Ejecutar la carga de datos al iniciar la página
+    cargarTrabajosDesdeSupabase();
+    cargarConfiguracionDesdeSupabase();
 });

@@ -1,0 +1,643 @@
+/* ==========================================================================
+   MONTAJES SUR - PANEL DE ADMINISTRACIÓN
+   Estilos CSS para Login y Dashboard (Vanilla CSS - Responsive)
+   ========================================================================== */
+
+:root {
+    --font-heading: 'Plus Jakarta Sans', sans-serif;
+    --font-body: 'Inter', sans-serif;
+
+    --color-bg-dark: #070a12;
+    --color-bg-surface: #0b111e;
+    --color-bg-card: #111a2e;
+    --color-bg-input: #080d17;
+
+    --color-accent-blue: #0099ff;
+    --color-accent-blue-hover: #007fd6;
+    --color-accent-blue-light: #38bdf8;
+    
+    --color-success: #10b981;
+    --color-danger: #ef4444;
+    --color-danger-hover: #dc2626;
+    --color-warning: #f59e0b;
+
+    --color-text-white: #ffffff;
+    --color-text-gray: #94a3b8;
+    --color-text-muted: #64748b;
+
+    --border-color: rgba(255, 255, 255, 0.09);
+    --border-focus: rgba(0, 153, 255, 0.5);
+
+    --shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+    --shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.85);
+
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+
+    --transition: all 0.25s ease;
+}
+
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--color-bg-dark);
+    color: var(--color-text-white);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   LOGIN STYLES
+   ========================================================================== */
+.login-body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: radial-gradient(circle at 50% 20%, rgba(0, 153, 255, 0.08) 0%, transparent 60%), var(--color-bg-dark);
+}
+
+.login-card {
+    width: 100%;
+    max-width: 440px;
+    background: var(--color-bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 40px 32px;
+    box-shadow: var(--shadow-card);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.login-logo {
+    height: 52px;
+    width: auto;
+    margin: 0 auto 16px;
+    display: block;
+}
+
+.login-title {
+    font-family: var(--font-heading);
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.login-subtitle {
+    font-size: 14px;
+    color: var(--color-text-gray);
+}
+
+.login-footer {
+    text-align: center;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.back-link {
+    color: var(--color-text-gray);
+    font-size: 14px;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.back-link:hover {
+    color: var(--color-accent-blue);
+}
+
+/* ==========================================================================
+   ADMIN LAYOUT & NAVBAR
+   ========================================================================== */
+.admin-navbar {
+    background-color: var(--color-bg-surface);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding: 14px 24px;
+}
+
+.admin-nav-container {
+    max-width: 1320px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.admin-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+.admin-logo-img {
+    height: 38px;
+    width: auto;
+}
+
+.admin-badge {
+    background: rgba(0, 153, 255, 0.15);
+    color: var(--color-accent-blue-light);
+    border: 1px solid rgba(0, 153, 255, 0.3);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: var(--radius-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.admin-nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.user-email-tag {
+    font-size: 13px;
+    color: var(--color-text-gray);
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .user-email-tag {
+        display: inline-block;
+    }
+}
+
+.admin-main {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+}
+
+/* ==========================================================================
+   TABS NAVIGATION
+   ========================================================================== */
+.admin-tabs {
+    display: flex;
+    gap: 8px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 28px;
+    overflow-x: auto;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    color: var(--color-text-gray);
+    font-family: var(--font-heading);
+    font-size: 15px;
+    font-weight: 600;
+    padding: 12px 20px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.tab-btn:hover {
+    color: var(--color-text-white);
+}
+
+.tab-btn.active {
+    color: var(--color-accent-blue);
+    border-bottom-color: var(--color-accent-blue);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* ==========================================================================
+   PAGE HEADER & BUTTONS
+   ========================================================================== */
+.section-header-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.section-title {
+    font-family: var(--font-heading);
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.section-desc {
+    font-size: 14px;
+    color: var(--color-text-gray);
+    margin-top: 4px;
+}
+
+.btn-primary-blue {
+    background: linear-gradient(135deg, var(--color-accent-blue) 0%, #007fd6 100%);
+    color: #ffffff;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.btn-primary-blue:hover {
+    background: linear-gradient(135deg, #1aa3ff 0%, #0070be 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 153, 255, 0.35);
+}
+
+.btn-secondary {
+    background: var(--color-bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--color-text-white);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 18px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition);
+    text-decoration: none;
+}
+
+.btn-secondary:hover {
+    border-color: rgba(255, 255, 255, 0.25);
+    background: #18233c;
+}
+
+.btn-danger-outline {
+    background: transparent;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #f87171;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: var(--transition);
+}
+
+.btn-danger-outline:hover {
+    background: var(--color-danger);
+    color: #ffffff;
+}
+
+.btn-edit-outline {
+    background: transparent;
+    border: 1px solid rgba(0, 153, 255, 0.4);
+    color: var(--color-accent-blue-light);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: var(--transition);
+}
+
+.btn-edit-outline:hover {
+    background: var(--color-accent-blue);
+    color: #ffffff;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+/* ==========================================================================
+   CARDS & GRIDS (TRABAJOS EN ADMIN)
+   ========================================================================== */
+.admin-jobs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.job-admin-card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: var(--transition);
+}
+
+.job-admin-card:hover {
+    border-color: rgba(0, 153, 255, 0.35);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-card);
+}
+
+.job-card-thumb-wrapper {
+    position: relative;
+    width: 100%;
+    height: 180px;
+    background-color: #060910;
+    overflow: hidden;
+}
+
+.job-card-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.job-card-order-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(4px);
+    padding: 3px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 600;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.job-admin-card-body {
+    padding: 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.job-card-title {
+    font-family: var(--font-heading);
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #ffffff;
+}
+
+.job-card-desc {
+    font-size: 13px;
+    color: var(--color-text-gray);
+    margin-bottom: 16px;
+    flex: 1;
+}
+
+.job-card-actions {
+    display: flex;
+    gap: 8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color);
+}
+
+/* ==========================================================================
+   FORMS & INPUTS
+   ========================================================================== */
+.admin-card {
+    background: var(--color-bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 28px;
+    box-shadow: var(--shadow-card);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text-gray);
+    margin-bottom: 8px;
+}
+
+.form-control {
+    width: 100%;
+    background: var(--color-bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 11px 14px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--color-text-white);
+    outline: none;
+    transition: var(--transition);
+}
+
+.form-control:focus {
+    border-color: var(--color-accent-blue);
+    box-shadow: 0 0 0 3px var(--border-focus);
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 90px;
+}
+
+.form-hint {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    margin-top: 6px;
+}
+
+/* Contenedor de subida de archivos */
+.file-upload-box {
+    border: 2px dashed var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 24px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.01);
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+}
+
+.file-upload-box:hover {
+    border-color: var(--color-accent-blue);
+    background: rgba(0, 153, 255, 0.03);
+}
+
+.file-upload-preview {
+    max-height: 160px;
+    max-width: 100%;
+    margin: 12px auto 0;
+    border-radius: var(--radius-sm);
+    display: none;
+    object-fit: cover;
+}
+
+/* ==========================================================================
+   MODAL WINDOW
+   ========================================================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(5px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-content {
+    background: var(--color-bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 560px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 28px;
+    box-shadow: var(--shadow-modal);
+    position: relative;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.modal-title {
+    font-family: var(--font-heading);
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.modal-close-btn {
+    background: none;
+    border: none;
+    color: var(--color-text-gray);
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+    transition: var(--transition);
+}
+
+.modal-close-btn:hover {
+    color: var(--color-text-white);
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-color);
+}
+
+/* ==========================================================================
+   ALERTS & TOASTS
+   ========================================================================== */
+.alert-box {
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    margin-bottom: 18px;
+}
+
+.alert-error {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #fca5a5;
+}
+
+.toast-notification {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #111a2e;
+    color: #ffffff;
+    border: 1px solid var(--color-success);
+    border-left: 5px solid var(--color-success);
+    padding: 14px 20px;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.toast-notification.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* ==========================================================================
+   SPINNER DE CARGA
+   ========================================================================== */
+.spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #ffffff;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    color: var(--color-text-gray);
+    border: 1px dashed var(--border-color);
+    border-radius: var(--radius-md);
+}
