@@ -12,6 +12,45 @@
 
     <!-- Estilos del Administrador -->
     <link rel="stylesheet" href="admin.css">
+
+    <style>
+        .password-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .password-input-wrapper input {
+            padding-right: 42px;
+        }
+        .toggle-password-btn {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            color: var(--color-text-gray);
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s ease;
+        }
+        .toggle-password-btn:hover {
+            color: var(--color-text-white);
+        }
+        .alert-error {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #fca5a5;
+            padding: 14px 16px;
+            border-radius: var(--radius-sm);
+            line-height: 1.45;
+            font-size: 13.5px;
+        }
+    </style>
 </head>
 <body class="login-body">
 
@@ -23,7 +62,15 @@
         </div>
 
         <form id="login-form" class="admin-form">
-            <div id="login-error" class="alert-box alert-error" style="display: none;"></div>
+            <!-- CAJA DE MENSAJE DE ERROR -->
+            <div id="login-error" class="alert-box alert-error" style="display: none;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20" style="flex-shrink: 0; color: #ef4444; margin-top: 1px;">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <span id="login-error-text">Mensaje de error</span>
+            </div>
 
             <div class="form-group">
                 <label for="email" class="form-label">Correo electrónico</label>
@@ -39,17 +86,25 @@
 
             <div class="form-group">
                 <label for="password" class="form-label">Contraseña</label>
-                <input 
-                    type="password" 
-                    id="password" 
-                    class="form-control" 
-                    placeholder="••••••••" 
-                    required 
-                    autocomplete="current-password"
-                >
+                <div class="password-input-wrapper">
+                    <input 
+                        type="password" 
+                        id="password" 
+                        class="form-control" 
+                        placeholder="••••••••" 
+                        required 
+                        autocomplete="current-password"
+                    >
+                    <button type="button" id="toggle-password" class="toggle-password-btn" aria-label="Mostrar u ocultar contraseña" title="Mostrar u ocultar contraseña">
+                        <svg id="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </button>
+                </div>
             </div>
 
-            <button type="submit" id="login-btn" class="btn-primary-blue w-100">
+            <button type="submit" id="login-btn" class="btn-primary-blue w-100" style="margin-top: 8px;">
                 <span id="login-btn-text">Iniciar Sesión</span>
                 <span id="login-btn-spinner" class="spinner" style="display: none;"></span>
             </button>
@@ -71,48 +126,104 @@
     <script src="supabase-client.js"></script>
 
     <script>
-        // Si el usuario ya tiene sesión activa, redirigir automáticamente al panel
         document.addEventListener('DOMContentLoaded', async () => {
-            if (!window.supabaseClient) return;
-
-            const { data: { session } } = await window.supabaseClient.auth.getSession();
-            if (session) {
-                window.location.href = 'admin.html';
-                return;
-            }
-
             const loginForm = document.getElementById('login-form');
             const errorBox = document.getElementById('login-error');
+            const errorText = document.getElementById('login-error-text');
             const loginBtn = document.getElementById('login-btn');
             const btnText = document.getElementById('login-btn-text');
             const btnSpinner = document.getElementById('login-btn-spinner');
+            const togglePasswordBtn = document.getElementById('toggle-password');
+            const passwordInput = document.getElementById('password');
 
+            // 1. Mostrar / Ocultar contraseña
+            if (togglePasswordBtn && passwordInput) {
+                togglePasswordBtn.addEventListener('click', () => {
+                    const isPassword = passwordInput.type === 'password';
+                    passwordInput.type = isPassword ? 'text' : 'password';
+                    togglePasswordBtn.innerHTML = isPassword 
+                        ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`
+                        : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="10" r="3"></circle></svg>`;
+                });
+            }
+
+            // 2. Verificar conexión con Supabase
+            if (!window.supabaseClient) {
+                errorText.textContent = 'No se pudo conectar con el servidor de Supabase. Verificá tu conexión a internet o el archivo supabase-client.js.';
+                errorBox.style.display = 'flex';
+                return;
+            }
+
+            // 3. Si ya hay una sesión activa en este navegador, ir directo al panel
+            try {
+                const { data: { session } } = await window.supabaseClient.auth.getSession();
+                if (session) {
+                    window.location.href = 'admin.html';
+                    return;
+                }
+            } catch (err) {
+                console.warn('Verificación de sesión:', err);
+            }
+
+            // 4. Procesar el formulario de Login
             loginForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 errorBox.style.display = 'none';
 
                 const email = document.getElementById('email').value.trim();
-                const password = document.getElementById('password').value;
+                const password = passwordInput.value;
 
-                // Animación de carga
+                if (!email || !password) {
+                    errorText.textContent = 'Por favor completá tanto el correo como la contraseña.';
+                    errorBox.style.display = 'flex';
+                    return;
+                }
+
+                // Efecto de carga en el botón
                 loginBtn.disabled = true;
                 btnText.style.display = 'none';
                 btnSpinner.style.display = 'inline-block';
 
-                const { data, error } = await window.supabaseClient.auth.signInWithPassword({
-                    email,
-                    password
-                });
+                try {
+                    const { data, error } = await window.supabaseClient.auth.signInWithPassword({
+                        email: email,
+                        password: password
+                    });
 
-                if (error) {
-                    errorBox.textContent = 'Error al iniciar sesión: ' + (error.message === 'Invalid login credentials' ? 'Correo o contraseña incorrectos.' : error.message);
-                    errorBox.style.display = 'block';
+                    if (error) {
+                        console.error('Error devuelto por Supabase Auth:', error);
+
+                        // Traducción clara y amigable de los posibles errores
+                        let mensaje = 'No se pudo iniciar sesión.';
+
+                        if (error.message.includes('Invalid login credentials') || error.status === 400) {
+                            mensaje = 'Contraseña o correo incorrectos. Por favor verificá mayúsculas, minúsculas y que el correo coincida con el que creaste en Supabase.';
+                        } else if (error.message.includes('Email not confirmed')) {
+                            mensaje = 'Este correo aún no fue confirmado. Marcá la casilla "Auto Confirm User" en la solapa Authentication de Supabase.';
+                        } else {
+                            mensaje = 'Error: ' + error.message;
+                        }
+
+                        errorText.textContent = mensaje;
+                        errorBox.style.display = 'flex';
+
+                        loginBtn.disabled = false;
+                        btnText.style.display = 'inline-block';
+                        btnSpinner.style.display = 'none';
+                    } else if (data && data.session) {
+                        // Éxito: Redirigir al panel de administración
+                        window.location.href = 'admin.html';
+                    } else {
+                        throw new Error('No se recibió la sesión de usuario.');
+                    }
+                } catch (err) {
+                    console.error('Error inesperado durante el login:', err);
+                    errorText.textContent = 'Ocurrió un error inesperado al intentar conectar: ' + err.message;
+                    errorBox.style.display = 'flex';
 
                     loginBtn.disabled = false;
                     btnText.style.display = 'inline-block';
                     btnSpinner.style.display = 'none';
-                } else if (data.session) {
-                    window.location.href = 'admin.html';
                 }
             });
         });
