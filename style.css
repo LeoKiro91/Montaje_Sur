@@ -190,7 +190,7 @@ button {
     color: #cbd5e1;
     position: relative;
     padding: 8px 0;
-    transition: var(--transition);
+    transition: color 0.25s ease;
 }
 
 .nav-link:hover {
@@ -199,10 +199,9 @@ button {
 
 .nav-link.active {
     color: var(--color-text-white);
-    font-weight: 600;
 }
 
-.nav-link.active::after {
+.nav-link::after {
     content: "";
     position: absolute;
     bottom: -4px;
@@ -211,6 +210,15 @@ button {
     height: 2px;
     background-color: var(--color-accent-blue);
     border-radius: 2px;
+    transform: scaleX(0);
+    transform-origin: center;
+    opacity: 0;
+    transition: transform 0.28s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.25s ease;
+}
+
+.nav-link.active::after {
+    transform: scaleX(1);
+    opacity: 1;
 }
 
 /* Botón WhatsApp Header (Desktop) */
@@ -969,6 +977,10 @@ button {
     .nav-link.active,
     .nav-link:hover {
         color: var(--color-accent-blue) !important;
+    }
+
+    .nav-link::after {
+        display: none;
     }
 
     .nav-cta-btn {

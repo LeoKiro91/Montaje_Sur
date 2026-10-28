@@ -54,37 +54,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 5. Navegación suave personalizada con compensación exacta del header fijo
-    document.querySelectorAll('a[href^="#"]').forEach(link => {
-        link.addEventListener('click', function(e) {
-            const targetId = this.getAttribute('href');
-            if (!targetId || targetId === '#') return;
-
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                e.preventDefault();
-                closeMobileMenu();
-
-                // Calculamos la altura real del header fijo + un margen de respiro
-                const headerHeight = siteHeader ? siteHeader.offsetHeight : 90;
-                const marginOffset = 20;
-                const elementTop = targetElement.getBoundingClientRect().top + window.pageYOffset;
-                const finalPosition = targetId === '#inicio' ? 0 : elementTop - (headerHeight + marginOffset);
-
-                window.scrollTo({
-                    top: Math.max(0, finalPosition),
-                    behavior: 'smooth'
-                });
-
-                if (history.pushState) {
-                    history.pushState(null, null, targetId);
-                }
-            }
-        });
-    });
-
-    // 6. Cambiar estilo del header al hacer scroll
-    window.addEventListener('scroll', () => {
+    // 5. Cambiar estilo del header al hacer scroll
+    function updateHeaderStyle() {
+        if (!siteHeader) return;
         if (window.scrollY > 40) {
             siteHeader.style.backgroundColor = 'rgba(5, 8, 15, 0.98)';
             siteHeader.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.5)';
@@ -92,35 +64,17 @@ document.addEventListener('DOMContentLoaded', () => {
             siteHeader.style.backgroundColor = 'rgba(7, 10, 18, 0.95)';
             siteHeader.style.boxShadow = 'none';
         }
-    });
+    }
 
-    // 7. Resaltar enlace activo según la sección visible
-    function highlightActiveLink() {
-        const currentScroll = window.scrollY || window.pageYOffset;
-        const headerHeight = siteHeader ? siteHeader.offsetHeight : 90;
-        const checkPosition = currentScroll + headerHeight + 60;
+    // 6. Resaltar enlace activo y sincronización de navegación
+    const sectionIds = ['inicio', 'servicios', 'nosotros', 'trabajos', 'contacto'];
+    let isClickScrolling = false;
+    let scrollEndTimer = null;
 
-        const sections = [
-            document.getElementById('inicio'),
-            document.getElementById('servicios'),
-            document.getElementById('nosotros'),
-            document.getElementById('trabajos'),
-            document.getElementById('contacto')
-        ].filter(Boolean);
-
-        let activeSectionId = 'inicio';
-
-        sections.forEach(section => {
-            const top = section.offsetTop;
-            const height = section.offsetHeight;
-            if (checkPosition >= top && checkPosition < top + height) {
-                activeSectionId = section.getAttribute('id');
-            }
-        });
-
+    function setActiveLink(sectionId) {
         navLinks.forEach(link => {
             const href = link.getAttribute('href');
-            if (href === `#${activeSectionId}`) {
+            if (href === `#${sectionId}`) {
                 link.classList.add('active');
             } else if (href && href.startsWith('#')) {
                 link.classList.remove('active');
@@ -128,7 +82,116 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    window.addEventListener('scroll', highlightActiveLink, { passive: true });
+    function highlightActiveLink() {
+        // Si el usuario acaba de hacer clic en un enlace del navbar, se respeta ese enlace
+        if (isClickScrolling) return;
+
+        const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+        const windowHeight = window.innerHeight;
+        const docHeight = document.documentElement.scrollHeight;
+
+        // Caso 1: Muy cerca del inicio de la página
+        if (scrollY < 60) {
+            setActiveLink('inicio');
+            return;
+        }
+
+        // Caso 2: Cerca del final de la página (donde está el banner de Contacto y Footer)
+        if (windowHeight + scrollY >= docHeight - 90) {
+            setActiveLink('contacto');
+            return;
+        }
+
+        // Caso 3: Evaluación precisa según la posición visible en pantalla
+        const headerHeight = siteHeader ? siteHeader.offsetHeight : 80;
+        const threshold = headerHeight + 110;
+
+        let currentActiveId = 'inicio';
+
+        for (const id of sectionIds) {
+            const section = document.getElementById(id);
+            if (!section) continue;
+            const rect = section.getBoundingClientRect();
+            if (rect.top <= threshold) {
+                currentActiveId = id;
+            }
+        }
+
+        setActiveLink(currentActiveId);
+    }
+
+    // Navegación suave personalizada y sincronizada al hacer clic en enlaces internos
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            const targetId = this.getAttribute('href');
+            if (!targetId || targetId === '#') return;
+
+            const targetElement = document.querySelector(targetId);
+            if (!targetElement) return;
+
+            e.preventDefault();
+            closeMobileMenu();
+
+            const sectionId = targetId.replace('#', '');
+            setActiveLink(sectionId);
+
+            isClickScrolling = true;
+            clearTimeout(scrollEndTimer);
+
+            const headerHeight = siteHeader ? siteHeader.offsetHeight : 80;
+            let targetScrollTop = 0;
+
+            if (targetId !== '#inicio') {
+                const rect = targetElement.getBoundingClientRect();
+                targetScrollTop = rect.top + window.pageYOffset - (headerHeight - 2);
+            }
+
+            const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+            const finalScroll = Math.min(Math.max(0, targetScrollTop), maxScroll);
+
+            window.scrollTo({
+                top: finalScroll,
+                behavior: 'smooth'
+            });
+
+            if (history.pushState) {
+                history.pushState(null, null, targetId);
+            }
+
+            // Detectar cuándo termina el desplazamiento suave
+            const onScrollEnd = () => {
+                clearTimeout(scrollEndTimer);
+                scrollEndTimer = setTimeout(() => {
+                    isClickScrolling = false;
+                    window.removeEventListener('scroll', onScrollEnd);
+                    highlightActiveLink();
+                }, 100);
+            };
+            window.addEventListener('scroll', onScrollEnd, { passive: true });
+
+            // Margen de seguridad para desbloquear
+            setTimeout(() => {
+                isClickScrolling = false;
+                highlightActiveLink();
+            }, 850);
+        });
+    });
+
+    // Control continuo de scroll con requestAnimationFrame para 60fps sin tirones
+    let scrollTicking = false;
+    window.addEventListener('scroll', () => {
+        updateHeaderStyle();
+        if (!scrollTicking) {
+            window.requestAnimationFrame(() => {
+                highlightActiveLink();
+                scrollTicking = false;
+            });
+            scrollTicking = true;
+        }
+    }, { passive: true });
+
+    // Sincronización inicial
+    highlightActiveLink();
 
     // =========================================================================
     // 7. CARGA DINÁMICA DE TRABAJOS Y CONFIGURACIÓN DESDE SUPABASE
@@ -203,6 +266,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         abrirLightbox(idx);
                     });
                 });
+
+                // Recalcular estado de navegación al renderizar tarjetas
+                highlightActiveLink();
             }
         } catch (err) {
             console.error('Error inesperado al cargar trabajos:', err);
