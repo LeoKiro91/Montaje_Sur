@@ -54,7 +54,36 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 5. Cambiar estilo del header al hacer scroll
+    // 5. Navegación suave personalizada con compensación exacta del header fijo
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            const targetId = this.getAttribute('href');
+            if (!targetId || targetId === '#') return;
+
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                e.preventDefault();
+                closeMobileMenu();
+
+                // Calculamos la altura real del header fijo + un margen de respiro
+                const headerHeight = siteHeader ? siteHeader.offsetHeight : 90;
+                const marginOffset = 20;
+                const elementTop = targetElement.getBoundingClientRect().top + window.pageYOffset;
+                const finalPosition = targetId === '#inicio' ? 0 : elementTop - (headerHeight + marginOffset);
+
+                window.scrollTo({
+                    top: Math.max(0, finalPosition),
+                    behavior: 'smooth'
+                });
+
+                if (history.pushState) {
+                    history.pushState(null, null, targetId);
+                }
+            }
+        });
+    });
+
+    // 6. Cambiar estilo del header al hacer scroll
     window.addEventListener('scroll', () => {
         if (window.scrollY > 40) {
             siteHeader.style.backgroundColor = 'rgba(5, 8, 15, 0.98)';
@@ -65,23 +94,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 6. Resaltar enlace activo según la sección visible
-    const sectionsToTrack = document.querySelectorAll('#inicio, #servicios, #trabajos, #nosotros, #contacto');
-    
+    // 7. Resaltar enlace activo según la sección visible
     function highlightActiveLink() {
         const currentScroll = window.scrollY || window.pageYOffset;
+        const headerHeight = siteHeader ? siteHeader.offsetHeight : 90;
+        const checkPosition = currentScroll + headerHeight + 60;
 
-        sectionsToTrack.forEach(section => {
-            const sectionHeight = section.offsetHeight;
-            const sectionTop = section.offsetTop - 140;
-            const sectionId = section.getAttribute('id');
-            const correspondingLink = document.querySelector(`.nav-menu a[href="#${sectionId}"]`);
+        const sections = [
+            document.getElementById('inicio'),
+            document.getElementById('servicios'),
+            document.getElementById('nosotros'),
+            document.getElementById('trabajos'),
+            document.getElementById('contacto')
+        ].filter(Boolean);
 
-            if (correspondingLink) {
-                if (currentScroll >= sectionTop && currentScroll < sectionTop + sectionHeight) {
-                    navLinks.forEach(link => link.classList.remove('active'));
-                    correspondingLink.classList.add('active');
-                }
+        let activeSectionId = 'inicio';
+
+        sections.forEach(section => {
+            const top = section.offsetTop;
+            const height = section.offsetHeight;
+            if (checkPosition >= top && checkPosition < top + height) {
+                activeSectionId = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            if (href === `#${activeSectionId}`) {
+                link.classList.add('active');
+            } else if (href && href.startsWith('#')) {
+                link.classList.remove('active');
             }
         });
     }
@@ -119,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (trabajos && trabajos.length > 0) {
                 trabajosCargados = trabajos;
-                const trabajosContainer = document.getElementById('trabajos');
+                const trabajosContainer = document.getElementById('trabajos-grid') || document.getElementById('trabajos');
                 if (!trabajosContainer) return;
 
                 // Generamos el HTML usando exactamente las mismas clases de estilo

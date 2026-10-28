@@ -50,6 +50,16 @@
 html {
     scroll-behavior: smooth;
     font-size: 16px;
+    scroll-padding-top: 105px;
+}
+
+/* Compensación de desplazamiento para que el header fijo nunca tape las secciones */
+#inicio,
+#servicios,
+#nosotros,
+#trabajos,
+#contacto {
+    scroll-margin-top: 105px;
 }
 
 body {
@@ -470,21 +480,22 @@ button {
     color: var(--color-text-dark-muted);
 }
 
-/* --- 6. SECCIÓN "SOBRE NOSOTROS" & GALERÍA DE PROYECTOS --- */
+/* --- 6. SECCIÓN "SOBRE NOSOTROS" (DEDICADA) --- */
 .about-section {
     padding: 100px 0;
     background-color: var(--color-bg-dark);
+    position: relative;
 }
 
-.about-layout {
+.about-layout-standalone {
     display: grid;
-    grid-template-columns: 4.5fr 7.5fr;
-    gap: 48px;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 60px;
     align-items: center;
 }
 
 .about-content {
-    padding-right: 20px;
+    padding-right: 10px;
 }
 
 .about-title {
@@ -494,7 +505,7 @@ button {
     line-height: 1.2;
     letter-spacing: -0.02em;
     color: var(--color-text-white);
-    margin-bottom: 22px;
+    margin-bottom: 20px;
 }
 
 .about-title span {
@@ -502,67 +513,174 @@ button {
 }
 
 .about-description {
-    font-size: 1rem;
-    line-height: 1.7;
+    font-size: 1.02rem;
+    line-height: 1.75;
     color: #cbd5e1;
+    margin-bottom: 28px;
+}
+
+/* Indicadores Clave de la Empresa */
+.about-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
     margin-bottom: 34px;
 }
 
-.btn-outline-white {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 26px;
-    border: 1.5px solid var(--color-accent-blue);
-    border-radius: 9999px;
-    font-family: var(--font-heading);
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--color-text-white);
+.about-stat-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 16px 12px;
+    text-align: center;
     transition: var(--transition);
 }
 
-.btn-outline-white svg {
-    width: 16px;
-    height: 16px;
-    transition: transform 0.25s ease;
+.about-stat-card:hover {
+    border-color: rgba(0, 153, 255, 0.4);
+    background: rgba(0, 153, 255, 0.04);
+    transform: translateY(-2px);
 }
 
-.btn-outline-white:hover {
-    background-color: var(--color-accent-blue);
-    color: var(--color-text-white);
-    box-shadow: 0 4px 18px rgba(0, 153, 255, 0.35);
+.stat-number {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: var(--color-accent-blue);
+    line-height: 1.1;
 }
 
-.btn-outline-white:hover svg {
-    transform: translateX(4px);
+.stat-label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--color-text-gray);
+    font-weight: 500;
+    margin-top: 6px;
 }
 
-/* Galería de 4 tarjetas */
-.about-gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+.about-action-wrap {
+    display: flex;
     gap: 16px;
+}
+
+/* Caja de imagen destacada Sobre Nosotros */
+.about-showcase-box {
+    position: relative;
+}
+
+.about-image-wrapper {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6);
+    aspect-ratio: 4 / 3;
+}
+
+.about-showcase-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s ease;
+}
+
+.about-image-wrapper:hover .about-showcase-img {
+    transform: scale(1.04);
+}
+
+.about-floating-badge {
+    position: absolute;
+    bottom: 18px;
+    left: 18px;
+    right: 18px;
+    background: rgba(7, 10, 18, 0.88);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(0, 153, 255, 0.35);
+    border-radius: 12px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: #ffffff;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+}
+
+.about-floating-badge svg {
+    color: var(--color-accent-blue);
+    flex-shrink: 0;
+}
+
+.about-floating-badge strong {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 0.92rem;
+    font-weight: 700;
+}
+
+.about-floating-badge span {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--color-text-gray);
+    margin-top: 2px;
+}
+
+/* --- 7. SECCIÓN "TRABAJOS REALIZADOS" (SEPARADA Y DEDICADA) --- */
+.works-section {
+    padding: 110px 0 120px;
+    background-color: #050811;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.section-heading-center {
+    text-align: center;
+    max-width: 760px;
+    margin: 0 auto 52px;
+}
+
+.section-title-large {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--color-text-white);
+    margin: 10px 0 16px;
+}
+
+.section-subtitle-text {
+    font-size: 1.05rem;
+    color: var(--color-text-gray);
+    line-height: 1.6;
+}
+
+/* Grilla de Tarjetas GRANDES para Trabajos */
+.gallery-grid-large {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
 }
 
 .gallery-card {
     position: relative;
-    border-radius: 8px;
+    border-radius: 14px;
     overflow: hidden;
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 16 / 11;
+    min-height: 290px;
     background-color: var(--color-bg-card-dark);
-    box-shadow: var(--shadow-soft);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: var(--transition);
+    box-shadow: 0 14px 35px -10px rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+    cursor: pointer;
 }
 
 .gallery-card-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .gallery-card-overlay {
@@ -570,34 +688,34 @@ button {
     inset: 0;
     background: linear-gradient(
         180deg,
-        rgba(0, 0, 0, 0.05) 0%,
-        rgba(0, 0, 0, 0.45) 50%,
+        rgba(0, 0, 0, 0) 35%,
+        rgba(0, 0, 0, 0.6) 70%,
         rgba(0, 0, 0, 0.95) 100%
     );
     display: flex;
     align-items: flex-end;
-    padding: 18px 14px;
+    padding: 24px 20px;
     z-index: 2;
 }
 
 .gallery-card-label {
     font-family: var(--font-heading);
-    font-size: 0.88rem;
+    font-size: 1.15rem;
     font-weight: 700;
     color: var(--color-text-white);
-    line-height: 1.25;
+    line-height: 1.3;
     letter-spacing: -0.01em;
     transition: color 0.25s ease;
 }
 
 .gallery-card:hover {
-    transform: translateY(-5px);
-    border-color: rgba(0, 153, 255, 0.5);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    transform: translateY(-8px);
+    border-color: rgba(0, 153, 255, 0.6);
+    box-shadow: 0 20px 45px -10px rgba(0, 153, 255, 0.28), 0 16px 36px rgba(0, 0, 0, 0.85);
 }
 
 .gallery-card:hover .gallery-card-img {
-    transform: scale(1.08);
+    transform: scale(1.07);
 }
 
 .gallery-card:hover .gallery-card-label {
@@ -880,9 +998,14 @@ button {
         font-size: 2.6rem;
     }
 
-    .about-gallery-grid {
+    .about-layout-standalone {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .gallery-grid-large {
         grid-template-columns: repeat(2, 1fr);
-        gap: 16px;
+        gap: 20px;
     }
 
     .cta-banner-grid {
@@ -946,16 +1069,23 @@ button {
         min-height: auto;
     }
 
-    .about-gallery-grid {
+    .about-stats-grid {
         grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .gallery-grid-large {
+        grid-template-columns: 1fr;
+        gap: 22px;
     }
 
     .gallery-card {
-        aspect-ratio: 16 / 9;
+        aspect-ratio: 16 / 10;
+        min-height: 250px;
     }
 
-    .about-title {
-        font-size: 1.85rem;
+    .section-title-large {
+        font-size: 2rem;
     }
 
     .cta-banner-title {

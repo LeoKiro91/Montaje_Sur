@@ -1,0 +1,3 @@
+# Redirección amigable y discreta para el panel de administración
+/admin     /login.html     200
+/admin/    /login.html     200
