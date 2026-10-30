@@ -1368,3 +1368,15 @@ button {
     transform: scale(1.05);
 }
 
+/* Ocultar cualquier badge, drawer o widget de Netlify */
+#netlify-drawer,
+netlify-drawer,
+.netlify-badge,
+[data-netlify-deploy-id],
+iframe[src*="netlify"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
