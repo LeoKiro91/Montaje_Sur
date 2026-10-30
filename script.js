@@ -390,6 +390,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
+    function normalizarWhatsApp(num) {
+        if (!num) return '5491144398714';
+        let clean = num.toString().replace(/\D/g, '');
+        if (clean === '5491100000000' || clean === '1100000000' || clean.length < 8) {
+            return '5491144398714';
+        }
+        if (clean.startsWith('0')) clean = clean.substring(1);
+        if (clean.startsWith('15')) clean = clean.substring(2);
+        if (clean.length === 10) {
+            clean = '549' + clean;
+        } else if (clean.startsWith('54') && !clean.startsWith('549') && clean.length === 12) {
+            clean = '549' + clean.substring(2);
+        }
+        return clean;
+    }
+
     /**
      * Carga los datos de contacto y textos comerciales desde la tabla 'configuracion'.
      */
@@ -409,30 +425,47 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (config) {
-                const numeroWhatsApp = config.whatsapp_numero || '5491100000000';
+                const numeroWhatsApp = normalizarWhatsApp(config.whatsapp_numero);
 
-                // 1. Actualizar botón WhatsApp del header
+                // 1. Actualizar botón WhatsApp del header (desktop)
                 const navWhatsApp = document.getElementById('nav-whatsapp-btn');
                 if (navWhatsApp) {
                     navWhatsApp.href = `https://wa.me/${numeroWhatsApp}?text=Hola%20Montajes%20Sur,%20quisiera%20hacer%20una%20consulta`;
                 }
 
-                // 2. Actualizar botón WhatsApp del banner
+                // 2. Actualizar botón WhatsApp del menú móvil
+                const navWhatsAppMobile = document.getElementById('nav-whatsapp-mobile-btn');
+                if (navWhatsAppMobile) {
+                    navWhatsAppMobile.href = `https://wa.me/${numeroWhatsApp}?text=Hola%20Montajes%20Sur,%20quisiera%20hacer%20una%20consulta`;
+                }
+
+                // 3. Actualizar botón WhatsApp flotante
+                const floatingWhatsApp = document.getElementById('floating-whatsapp-btn');
+                if (floatingWhatsApp) {
+                    floatingWhatsApp.href = `https://wa.me/${numeroWhatsApp}?text=Hola%20Montajes%20Sur,%20quisiera%20hacer%20una%20consulta`;
+                }
+
+                // 4. Actualizar botón WhatsApp del banner
                 const ctaWhatsApp = document.getElementById('cta-whatsapp-btn');
                 if (ctaWhatsApp) {
                     ctaWhatsApp.href = `https://wa.me/${numeroWhatsApp}?text=Hola%20Montajes%20Sur,%20tengo%20un%20proyecto%20y%20quisiera%20asesoramiento`;
                 }
 
-                // 3. Actualizar texto descriptivo del banner
+                // 5. Actualizar texto descriptivo del banner
                 const ctaBannerDesc = document.getElementById('cta-banner-desc');
                 if (ctaBannerDesc && config.texto_banner) {
                     ctaBannerDesc.textContent = config.texto_banner;
                 }
 
-                // 4. Actualizar datos de contacto en el Footer
+                // 6. Actualizar datos de contacto en el Footer
                 const footerTelefono = document.getElementById('footer-telefono');
                 if (footerTelefono && config.telefono_contacto) {
                     footerTelefono.textContent = config.telefono_contacto;
+                }
+
+                const footerTelefonoLink = document.getElementById('footer-telefono-link');
+                if (footerTelefonoLink) {
+                    footerTelefonoLink.href = `https://wa.me/${numeroWhatsApp}?text=Hola%20Montajes%20Sur,%20quisiera%20hacer%20una%20consulta`;
                 }
 
                 const footerEmail = document.getElementById('footer-email');

@@ -510,7 +510,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         const saveText = document.getElementById('save-config-text');
         const saveSpinner = document.getElementById('save-config-spinner');
 
-        const whatsapp_numero = document.getElementById('cfg-whatsapp').value.trim();
+        function limpiarNumeroWhatsApp(num) {
+            if (!num) return '5491144398714';
+            let clean = num.toString().replace(/\D/g, '');
+            if (clean.startsWith('0')) clean = clean.substring(1);
+            if (clean.startsWith('15')) clean = clean.substring(2);
+            if (clean.length === 10) clean = '549' + clean;
+            else if (clean.startsWith('54') && !clean.startsWith('549') && clean.length === 12) clean = '549' + clean.substring(2);
+            return clean || '5491144398714';
+        }
+
+        const rawWhatsApp = document.getElementById('cfg-whatsapp').value.trim();
+        const whatsapp_numero = limpiarNumeroWhatsApp(rawWhatsApp);
         const email_contacto = document.getElementById('cfg-email').value.trim();
         const telefono_contacto = document.getElementById('cfg-telefono').value.trim();
         const cobertura_texto = document.getElementById('cfg-cobertura').value.trim();

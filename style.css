@@ -816,6 +816,63 @@ button {
     transform: translateY(-2px);
 }
 
+/* --- BOTÓN FLOTANTE DE WHATSAPP (ACCESO RÁPIDO EN MÓVIL Y DESKTOP) --- */
+.whatsapp-floating-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 60px;
+    height: 60px;
+    background-color: #25d366;
+    color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(37, 211, 102, 0.45);
+    z-index: 1900;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    text-decoration: none;
+}
+
+.whatsapp-floating-btn svg {
+    width: 32px;
+    height: 32px;
+    fill: #ffffff;
+}
+
+.whatsapp-floating-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 26px rgba(37, 211, 102, 0.65);
+}
+
+.mobile-menu-whatsapp {
+    display: none;
+}
+
+@media (max-width: 900px) {
+    .whatsapp-floating-btn {
+        bottom: 18px;
+        right: 18px;
+        width: 52px;
+        height: 52px;
+    }
+
+    .whatsapp-floating-btn svg {
+        width: 28px;
+        height: 28px;
+    }
+
+    .mobile-menu-whatsapp {
+        display: inline-flex !important;
+        margin-top: 18px;
+        width: 100%;
+        justify-content: center;
+        padding: 12px 18px;
+        font-size: 0.95rem;
+    }
+}
+
 /* --- 8. FOOTER CORPORATIVO --- */
 .site-footer {
     background-color: #03060c;
