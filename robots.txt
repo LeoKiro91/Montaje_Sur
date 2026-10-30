@@ -1,0 +1,9 @@
+# Robots.txt para Montajes Sur
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /login.html
+
+# Sitemap oficial
+Sitemap: https://www.montajessur.com.ar/sitemap.xml
