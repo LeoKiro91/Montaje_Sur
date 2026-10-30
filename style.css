@@ -895,6 +895,18 @@ button {
     color: #64748b;
 }
 
+.footer-credit-link {
+    color: var(--color-accent-blue);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+.footer-credit-link:hover {
+    color: var(--color-accent-blue-light);
+    text-decoration: underline;
+}
+
 /* --- 9. RESPONSIVE DESIGN (MEDIA QUERIES) --- */
 
 /* Pantallas intermedias (<= 1200px) */
