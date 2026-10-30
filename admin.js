@@ -511,13 +511,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         const saveSpinner = document.getElementById('save-config-spinner');
 
         function limpiarNumeroWhatsApp(num) {
-            if (!num) return '5491144398714';
+            if (!num) return '5491166340462';
             let clean = num.toString().replace(/\D/g, '');
             if (clean.startsWith('0')) clean = clean.substring(1);
             if (clean.startsWith('15')) clean = clean.substring(2);
             if (clean.length === 10) clean = '549' + clean;
             else if (clean.startsWith('54') && !clean.startsWith('549') && clean.length === 12) clean = '549' + clean.substring(2);
-            return clean || '5491144398714';
+            return clean || '5491166340462';
         }
 
         const rawWhatsApp = document.getElementById('cfg-whatsapp').value.trim();

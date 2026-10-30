@@ -391,10 +391,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     function normalizarWhatsApp(num) {
-        if (!num) return '5491144398714';
+        if (!num) return '5491166340462';
         let clean = num.toString().replace(/\D/g, '');
         if (clean === '5491100000000' || clean === '1100000000' || clean.length < 8) {
-            return '5491144398714';
+            return '5491166340462';
         }
         if (clean.startsWith('0')) clean = clean.substring(1);
         if (clean.startsWith('15')) clean = clean.substring(2);
