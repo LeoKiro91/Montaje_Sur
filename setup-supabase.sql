@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS public.trabajos (
 -- 2. TABLA DE CONFIGURACIÓN Y CONTACTO
 CREATE TABLE IF NOT EXISTS public.configuracion (
     id INT PRIMARY KEY DEFAULT 1,
-    whatsapp_numero TEXT NOT NULL DEFAULT '5491100000000',
+    whatsapp_numero TEXT NOT NULL DEFAULT '5491166340462',
     email_contacto TEXT NOT NULL DEFAULT 'info@montajessur.com',
     telefono_contacto TEXT DEFAULT 'Atención comercial y urgencias técnicas',
     cobertura_texto TEXT DEFAULT 'Cobertura y servicio en toda la región',
@@ -53,7 +53,7 @@ CREATE POLICY "Administradores pueden insertar configuración" ON public.configu
 
 -- 4. INSERTAR DATOS INICIALES (Los que hoy están en tu index.html)
 INSERT INTO public.configuracion (id, whatsapp_numero, email_contacto, telefono_contacto, cobertura_texto, texto_banner)
-VALUES (1, '5491100000000', 'info@montajessur.com', 'Atención comercial y urgencias técnicas', 'Cobertura y servicio en toda la región', 'Consultanos sin compromiso. Te asesoramos y buscamos la mejor solución para tu necesidad.')
+VALUES (1, '5491166340462', 'info@montajessur.com', 'Atención comercial y urgencias técnicas', 'Cobertura y servicio en toda la región', 'Consultanos sin compromiso. Te asesoramos y buscamos la mejor solución para tu necesidad.')
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO public.trabajos (titulo, descripcion, imagen_url, orden) VALUES

@@ -491,7 +491,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (error && error.code !== 'PGRST116') throw error;
 
             if (config) {
-                document.getElementById('cfg-whatsapp').value = config.whatsapp_numero || '';
+                let wpNum = config.whatsapp_numero || '5491166340462';
+                if (wpNum.includes('44398714') || wpNum.includes('0000000')) {
+                    wpNum = '5491166340462';
+                }
+                document.getElementById('cfg-whatsapp').value = wpNum;
                 document.getElementById('cfg-email').value = config.email_contacto || '';
                 document.getElementById('cfg-telefono').value = config.telefono_contacto || '';
                 document.getElementById('cfg-cobertura').value = config.cobertura_texto || '';

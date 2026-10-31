@@ -390,11 +390,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
+    const NUMERO_OFICIAL_WHATSAPP = '5491166340462';
+
     function normalizarWhatsApp(num) {
-        if (!num) return '5491166340462';
+        if (!num) return NUMERO_OFICIAL_WHATSAPP;
         let clean = num.toString().replace(/\D/g, '');
-        if (clean === '5491100000000' || clean === '1100000000' || clean.length < 8) {
-            return '5491166340462';
+        // Si tiene el número viejo (44398714) o el de prueba con ceros
+        if (clean.includes('44398714') || clean.includes('0000000') || clean.length < 8) {
+            return NUMERO_OFICIAL_WHATSAPP;
         }
         if (clean.startsWith('0')) clean = clean.substring(1);
         if (clean.startsWith('15')) clean = clean.substring(2);
@@ -403,7 +406,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (clean.startsWith('54') && !clean.startsWith('549') && clean.length === 12) {
             clean = '549' + clean.substring(2);
         }
-        return clean;
+        return clean || NUMERO_OFICIAL_WHATSAPP;
     }
 
     /**
@@ -426,6 +429,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (config) {
                 const numeroWhatsApp = normalizarWhatsApp(config.whatsapp_numero);
+
+                // Si en Supabase estaba guardado el número anterior, auto-actualizamos la fila
+                if (config.whatsapp_numero && (config.whatsapp_numero.includes('44398714') || config.whatsapp_numero.includes('0000000'))) {
+                    window.supabaseClient
+                        .from('configuracion')
+                        .update({ whatsapp_numero: NUMERO_OFICIAL_WHATSAPP })
+                        .eq('id', 1)
+                        .then(() => console.log('✅ Número de WhatsApp actualizado a 5491166340462'))
+                        .catch(() => {});
+                }
 
                 // 1. Actualizar botón WhatsApp del header (desktop)
                 const navWhatsApp = document.getElementById('nav-whatsapp-btn');
