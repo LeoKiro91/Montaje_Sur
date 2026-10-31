@@ -51,6 +51,8 @@ html {
     scroll-behavior: smooth;
     font-size: 16px;
     scroll-padding-top: 105px;
+    overflow-x: hidden;
+    max-width: 100%;
 }
 
 /* Compensación de desplazamiento para que el header fijo nunca tape las secciones */
@@ -68,6 +70,8 @@ body {
     color: var(--color-text-white);
     line-height: 1.6;
     overflow-x: hidden;
+    max-width: 100%;
+    position: relative;
     -webkit-font-smoothing: antialiased;
 }
 
@@ -109,6 +113,7 @@ button {
 
 .section-pretitle {
     display: inline-flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 8px;
     font-family: var(--font-heading);
@@ -118,6 +123,8 @@ button {
     text-transform: uppercase;
     color: var(--color-text-gray);
     margin-bottom: 14px;
+    max-width: 100%;
+    word-break: break-word;
 }
 
 .section-pretitle::after {
@@ -999,9 +1006,15 @@ button {
     }
 
     .site-logo-img {
-        height: 138px;
-        max-width: 390px;
-        margin: -26px 0;
+        height: 96px;
+        max-width: 270px;
+        margin: -16px 0;
+    }
+
+    .footer-logo-img {
+        height: 110px;
+        max-width: 280px;
+        margin: -10px 0 12px 0;
     }
 
     /* Mostrar botón hamburguesa */
@@ -1009,13 +1022,14 @@ button {
         display: flex;
     }
 
-    /* Menú móvil desplegable tipo Drawer */
+    /* Menú móvil desplegable tipo Drawer (usando transform para no expandir el ancho de pantalla) */
     .nav-menu {
         position: fixed;
         top: 0;
-        right: -100%;
+        right: 0;
+        transform: translateX(100%);
         width: 82%;
-        max-width: 340px;
+        max-width: 320px;
         height: 100vh;
         background-color: #080d1a;
         flex-direction: column;
@@ -1025,12 +1039,12 @@ button {
         border-left: 1px solid var(--border-dark);
         box-shadow: -15px 0 35px rgba(0, 0, 0, 0.85);
         z-index: 2100;
-        transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         overflow-y: auto;
     }
 
     .nav-menu.is-open {
-        right: 0;
+        transform: translateX(0);
     }
 
     .nav-link {
@@ -1117,17 +1131,34 @@ button {
 /* Teléfonos móviles (<= 600px) */
 @media (max-width: 600px) {
     .nav-container {
-        height: 76px;
+        height: 72px;
+    }
+
+    .brand-logo {
+        max-width: calc(100% - 54px);
+        display: inline-flex;
+        align-items: center;
     }
 
     .site-logo-img {
-        height: 112px;
-        max-width: 310px;
-        margin: -20px 0;
+        height: 76px;
+        max-width: 210px;
+        margin: -8px 0;
+    }
+
+    .footer-logo-img {
+        height: 80px;
+        max-width: 230px;
+        margin: -8px 0 10px 0;
+    }
+
+    .section-pretitle {
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
     }
 
     .hero-title {
-        font-size: 2.1rem;
+        font-size: 2.05rem;
     }
 
     .hero-description {
@@ -1182,6 +1213,51 @@ button {
         flex-direction: column;
         gap: 12px;
         text-align: center;
+    }
+}
+
+/* Pantallas compactas (Samsung S20 FE a 360px, iPhone SE, etc. <= 400px) */
+@media (max-width: 400px) {
+    .container {
+        padding: 0 16px;
+    }
+
+    .site-logo-img {
+        height: 64px;
+        max-width: 180px;
+        margin: 0;
+    }
+
+    .hero-section {
+        padding-top: 100px;
+        padding-bottom: 50px;
+    }
+
+    .hero-title {
+        font-size: 1.8rem;
+        line-height: 1.2;
+    }
+
+    .hero-description {
+        font-size: 0.95rem;
+        margin-bottom: 24px;
+    }
+
+    .section-title-large {
+        font-size: 1.75rem;
+    }
+
+    .about-title {
+        font-size: 1.75rem;
+    }
+
+    .cta-banner-title {
+        font-size: 1.45rem;
+    }
+
+    .btn-primary-blue {
+        padding: 12px 22px;
+        font-size: 0.9rem;
     }
 }
 
